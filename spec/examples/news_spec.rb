@@ -18,9 +18,7 @@ describe News, "when first created with 2 publications attached" do
   end
   
   it { @news.should have(2).publication_history }
-  
   it { @news.should be_published }
-  
   it { @news.should_not be_unpublished }
 end
 
