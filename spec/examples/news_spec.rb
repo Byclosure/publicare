@@ -4,14 +4,9 @@ describe News, "when first created" do
   before do
     @news = News.create :title => "My first news!"
   end
-  
-  it "should default to unpublished" do
-    @news.unpublished?.should_not be_true
-  end
-  
-  it "should not default to publish" do
-    @news.published?.should be_true
-  end
+
+  it { @news.should_not be_unpublished }
+  it { @news.should_not be_published }
 end
 
 describe News, "when first created with 2 publications attached" do
@@ -22,17 +17,11 @@ describe News, "when first created with 2 publications attached" do
     ]
   end
   
-  it do
-    @news.publication_history.should have(2).items
-  end
+  it { @news.should have(2).publication_history }
   
-  it "should be published" do
-    @news.published?.should be_true
-  end
+  it { @news.should be_published }
   
-  it "should not be unpublished" do
-    @news.unpublished?.should_not be_true
-  end
+  it { @news.should_not be_unpublished }
 end
 
 describe News, "when first created with option :published => true" do
@@ -41,17 +30,9 @@ describe News, "when first created with option :published => true" do
     @news.reload
   end
   
-  it do
-    @news.should have(1).publication_history
-  end
-  
-  it "should be published" do
-    @news.published?.should be_true
-  end
-  
-  it "should not be unpublished" do
-    @news.unpublished?.should_not be_true
-  end
+  it { @news.should have(1).publication_history }
+  it { @news.should be_published }
+  it { @news.should_not be_unpublished }
 end
 
 describe News, "when :published => false and updated to true" do
@@ -62,21 +43,14 @@ describe News, "when :published => false and updated to true" do
     @news.reload
   end
   
-  it do
-    @news.should have(2).publication_history
-  end
+  it { @news.should have(2).publication_history }
   
   it "#publication should be the most recent one" do
     @news.publication.should == @news.publication_history.sort {|p1, p2| p1.created_at <=> p2.created_at}.last
   end
   
-  it "should be published" do
-    @news.published?.should be_true
-  end
-  
-  it "should not be unpublished" do
-    @news.unpublished?.should_not be_true
-  end
+  it { @news.should be_published }
+  it { @news.should_not be_unpublished }
 end
 
 describe News, "when :published => false and updated to false with timestamp (same value)" do
@@ -86,21 +60,14 @@ describe News, "when :published => false and updated to false with timestamp (sa
     @news.reload
   end
   
-  it do
-    @news.should have(1).publication_history
-  end
+  it { @news.should have(1).publication_history }
   
   it "should update updated_at to received time from its most recent publication" do
     @news.publication.updated_at.should == @time
   end
   
-  it "should not be published" do
-    @news.published?.should_not be_true
-  end
-  
-  it "should be unpublished" do
-    @news.unpublished?.should be_true
-  end
+  it { @news.should_not be_published }
+  it { @news.should be_unpublished }
 end
 
 describe News, "when :published => true and exclusively updated to true (same value)" do

@@ -6,6 +6,7 @@ lib_path = File.expand_path("#{dir}/../lib")
 $LOAD_PATH.unshift lib_path unless $LOAD_PATH.include?(lib_path)
 $_spec_spec = true # Prevents Kernel.exit in various places
 
+require "rubygems"
 require 'spec'
 require 'spec/mocks'
 
@@ -64,6 +65,40 @@ Spec::Runner.configure do |config|
    config.append_after(:each) do
      ActiveRecord::Base.descendents.each(&:delete_all)
    end
-   
-   config.predicate_matchers[:be_published] = :published?
+end
+
+Spec::Matchers.define :be_published do
+  match do |publication|
+    publication.published?
+  end
+  
+  failure_message_for_should do |publication|
+    "expected that #{publication} would be published"
+  end
+  
+  failure_message_for_should_not do |publication|
+    "expected that #{publication} would not be published"
+  end
+
+  description do
+    "be published"
+  end
+end
+
+Spec::Matchers.define :be_unpublished do
+  match do |publication|
+    publication.unpublished?
+  end
+  
+  failure_message_for_should do |publication|
+    "expected that #{publication} would be unpublished"
+  end
+  
+  failure_message_for_should_not do |publication|
+    "expected that #{publication} would not be unpublished"
+  end
+
+  description do
+    "be unpublished"
+  end
 end
